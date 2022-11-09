@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>报单工具</title>
+  <link rel="shortcut icon" href="./static/imgs/xb128.ico">
+  <link href="./static/vuetify/css.css" rel="stylesheet">
+  <link href="./static/vuetify/materialdesignicons.min.css" rel="stylesheet">
+  <link href="./static/vuetify/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  
+</head>
+<body>
+  <div id="app">
+    <v-app >
+      <v-app-bar app>
+        <v-app-bar-title dense>
+          <v-img src="./static/imgs/xb_white.png" width="100"></v-img>
+        </v-app-bar-title>
+        <v-spacer></v-spacer>
+        <v-tabs dark icons-and-text color="teal lighten-3">
+          <v-tabs-slider color="teal lighten-3"></v-tabs-slider>
+          <v-tab v-for="item in items" :to="item.routerLink">
+            {{ item.title }}
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-tab>
+        </v-tabs>
+      </v-app-bar>
+
+      <v-main >
+        <v-container fluid >
+          <router-view></router-view>
+        </v-container>
+      </v-main>
+
+      <v-snackbar v-model="snackbar" :timeout="5000">
+        {{ message }}
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            color="pink"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+          >
+            关闭
+          </v-btn>
+        </template>
+      </v-snackbar>
+    </v-app>
+  </div>
+
+  <script src="./static/vue.min.js"></script>
+  <script src="./static/vue-cookies.js"></script>
+  <script src="./static/vue-router.js"></script>
+  <script src="./static/vuetify/vuetify.min.js"></script>
+  <script src="./static/manager_error_msg.js"></script>
+  <script src="common.js"></script>
+  <script src="account.js"></script>
+  <script src="transfer_cap.js"></script>
+  <script src="fund_transfer.js"></script>
+  <script src="transfer_cap_form.js"></script>
+  <script src="fund_transfer_form.js"></script>
+  <script src="capital_query.js"></script>
+  <script src="capital.js"></script>
+
+  <script src="buy.js"></script>
+  <script src="position.js"></script>
+  <script src="entrust.js"></script>
+  <script src="trade.js"></script>
+  <script src="deal_query.js"></script>
+  <script src="deal.js"></script>
+  <script>
+    const routes = [
+      {path: "/", component: capitalCom},
+      {path: "/capital", component: capitalCom},
+      {path: "/deal", component: dealCom},
+    ];
+    const router = new VueRouter({routes});
+    const app = new Vue({
+      el: '#app',
+      router,
+      data: {
+        snackbar: false,
+        message: "",
+        drawer: true,
+        items: [
+          { title: '资金', icon: 'mdi-currency-cny', routerLink: '/capital' },
+          { title: '交易', icon: 'mdi-bank-transfer', routerLink: '/deal' },
+        ],
+        mini: false,
+      },
+      vuetify: new Vuetify({
+        theme: {
+          dark: true,
+        }
+      }),
+      mounted(){
+        let market = this.$cookies.get('market');
+        let em = document.createElement('script');
+        if (market == 1){
+          em.setAttribute('src', './static/ss_error_msg.js');
+          document.body.appendChild(em);
+        } else {
+          em.setAttribute('src', './static/sz_error_msg.js');
+          document.body.appendChild(em);
+        }
+      }
+    })
+  </script>
+</body>
+</html>
